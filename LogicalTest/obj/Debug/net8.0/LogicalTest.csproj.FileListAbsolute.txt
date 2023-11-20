@@ -1,0 +1,14 @@
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\bin\Debug\net8.0\LogicalTest.exe
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\bin\Debug\net8.0\LogicalTest.deps.json
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\bin\Debug\net8.0\LogicalTest.runtimeconfig.json
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\bin\Debug\net8.0\LogicalTest.dll
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\bin\Debug\net8.0\LogicalTest.pdb
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.AssemblyInfoInputs.cache
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.AssemblyInfo.cs
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.csproj.CoreCompileInputs.cache
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.dll
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\refint\LogicalTest.dll
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.pdb
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\LogicalTest.genruntimeconfig.cache
+C:\Users\bruno\source\repos\LogicalTest\LogicalTest\obj\Debug\net8.0\ref\LogicalTest.dll
