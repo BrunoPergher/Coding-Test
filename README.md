@@ -58,8 +58,6 @@ Age should be randomized between 10 and 90
 ID should be increasing sequentially.
 The first names and last names of the Appendix should be used in random combinations
 
-
-
 Appendix:
 Data:
 First names:					Last names:
