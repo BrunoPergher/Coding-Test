@@ -1,5 +1,6 @@
 using CustomerManagement.Models;
 using CustomerManagement.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -12,7 +13,8 @@ public class CustomerServiceTests
     public void AddRandomCustomers_ShouldAddCustomers()
     {
         // Arrange
-        var service = new CustomerService();
+        var logger = new LoggerFactory().CreateLogger<CustomerService>();
+        var service = new CustomerService(logger);
 
         // Act
         service.AddRandomCustomers(5);
@@ -26,7 +28,8 @@ public class CustomerServiceTests
     public void AddCustomers_WithInvalidCustomer_ShouldThrowException()
     {
         // Arrange
-        var service = new CustomerService();
+        var logger = new LoggerFactory().CreateLogger<CustomerService>();
+        var service = new CustomerService(logger);
         var invalidCustomer = new Customer(); // Missing required fields
 
         // Act and Assert
@@ -37,7 +40,8 @@ public class CustomerServiceTests
     public void AddCustomers_WithInvalidAge_ShouldThrowException()
     {
         // Arrange
-        var service = new CustomerService();
+        var logger = new LoggerFactory().CreateLogger<CustomerService>();
+        var service = new CustomerService(logger);
         var invalidCustomer = new Customer
         {
             FirstName = "John",
