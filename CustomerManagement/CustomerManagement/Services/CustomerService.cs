@@ -1,64 +1,115 @@
+using CustomerManagement.Interfaces;
 using CustomerManagement.Models;
 using Newtonsoft.Json;
 
 namespace CustomerManagement.Services;
 
-public class CustomerService
+public class CustomerService : ICustomerService
 {
     private const string DataFilePath = "customers.json";
     private readonly string[] firstNames = { "Leia", "Sadie", "Jose", "Sara", "Frank", "Dewey", "Tomas", "Joel", "Lukas", "Carlos" };
     private readonly string[] lastNames = { "Liberty", "Ray", "Harrison", "Ronan", "Drew", "Powell", "Larsen", "Chan", "Anderson", "Lane" };
     private readonly List<Customer> customers;
     private readonly Random random = new Random();
+    private readonly ILogger<CustomerService> logger;
 
-    public CustomerService()
+    public CustomerService(ILogger<CustomerService> logger)
     {
+        this.logger = logger;
         customers = LoadPersistedData() ?? new List<Customer>();
     }
 
     public List<Customer> GetCustomers()
     {
+        logger.LogInformation("GetCustomers method called");
         return new List<Customer>(customers);
     }
 
     public void AddRandomCustomers(int count)
     {
-        var newCustomers = new List<Customer>();
+        logger.LogInformation($"AddRandomCustomers method called with count: {count}");
 
-        for (int i = 0; i < count; i++)
+        try
         {
-            var newCustomer = GenerateRandomCustomer();
-            ValidateCustomer(newCustomer);
-            InsertSorted(newCustomer);
-            newCustomers.Add(newCustomer);
-        }
+            if (count <= 0)
+            {
+                logger.LogWarning("Invalid count provided in AddRandomCustomers");
+                throw new ArgumentException("Count must be greater than 0");
+            }
 
-        PersistData();
+            var newCustomers = new List<Customer>();
+
+            for (int i = 0; i < count; i++)
+            {
+                var newCustomer = GenerateRandomCustomer();
+                ValidateCustomer(newCustomer);
+                InsertSorted(newCustomer);
+                newCustomers.Add(newCustomer);
+            }
+
+            PersistData();
+
+            logger.LogInformation($"{count} random customers added successfully");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error in AddRandomCustomers: {ex}");
+            throw;
+        }
     }
 
     public void AddCustomers(List<Customer> newCustomers)
     {
-        foreach (var newCustomer in newCustomers)
-        {
-            ValidateCustomer(newCustomer);
-            InsertSorted(newCustomer);
-        }
+        logger.LogInformation($"AddCustomers method called with {newCustomers.Count} customers");
 
-        PersistData();
+        try
+        {
+            if (newCustomers == null || newCustomers.Count == 0)
+            {
+                logger.LogWarning("No customers provided for addition in AddCustomers");
+                throw new ArgumentException("List of customers is empty");
+            }
+
+            foreach (var newCustomer in newCustomers)
+            {
+                ValidateCustomer(newCustomer);
+                InsertSorted(newCustomer);
+            }
+
+            PersistData();
+
+            logger.LogInformation($"{newCustomers.Count} customers added successfully");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error in AddCustomers: {ex}");
+            throw;
+        }
     }
 
     public List<Customer> LoadPersistedData()
     {
-        if (File.Exists(DataFilePath))
-        {
-            var jsonData = File.ReadAllText(DataFilePath);
-            return JsonConvert.DeserializeObject<List<Customer>>(jsonData);
-        }
+        logger.LogInformation("LoadPersistedData method called");
 
-        return null;
+        try
+        {
+            if (File.Exists(DataFilePath))
+            {
+                var jsonData = File.ReadAllText(DataFilePath);
+                return JsonConvert.DeserializeObject<List<Customer>>(jsonData);
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error in LoadPersistedData: {ex}");
+            throw;
+        }
     }
 
     #region Private Methods
+
     private Customer GenerateRandomCustomer()
     {
         var firstName = firstNames[random.Next(firstNames.Length)];

@@ -1,53 +1,80 @@
+using CustomerManagement.Interfaces;
 using CustomerManagement.Models;
 using CustomerManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CustomerManagementApi.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CustomerController : ControllerBase
+namespace CustomerManagementApi.Controllers
 {
-    private readonly CustomerService customerService;
-
-    public CustomerController(CustomerService customerService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CustomerController : ControllerBase
     {
-        this.customerService = customerService;
-    }
+        private readonly ICustomerService _customerService;
+        private readonly ILogger<CustomerController> logger;
 
-    [HttpGet]
-    public ActionResult<List<Customer>> GetCustomers()
-    {
-        var customers = customerService.GetCustomers();
-
-        return Ok(customers);
-    }
-
-    [HttpPost("addrandom/{count}")]
-    public ActionResult AddRandomCustomers(int count)
-    {
-        try
+        public CustomerController(
+            ICustomerService customerService,
+            ILogger<CustomerController> logger)
         {
-            customerService.AddRandomCustomers(count);
-            return Ok($"{count} random customers added successfully");
+            this._customerService = customerService;
+            this.logger = logger;
         }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
 
-    [HttpPost("add")]
-    public ActionResult AddCustomers([FromBody] List<Customer> newCustomers)
-    {
-        try
+        [HttpGet]
+        public ActionResult<List<Customer>> GetCustomers()
         {
-            customerService.AddCustomers(newCustomers);
-            return Ok($"{newCustomers.Count} customers added successfully");
+            try
+            {
+                var customers = _customerService.GetCustomers();
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error in GetCustomers: {ex}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        [HttpPost("addrandom/{count}")]
+        public ActionResult AddRandomCustomers(int count)
         {
-            return BadRequest(ex.Message);
+            try
+            {
+                if (count <= 0)
+                {
+                    logger.LogWarning("Invalid count provided in AddRandomCustomers");
+                    return BadRequest("Count must be greater than 0");
+                }
+
+                _customerService.AddRandomCustomers(count);
+                return Ok($"{count} random customers added successfully");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error in AddRandomCustomers: {ex}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("add")]
+        public ActionResult AddCustomers([FromBody] List<Customer> newCustomers)
+        {
+            try
+            {
+                if (newCustomers == null || !newCustomers.Any())
+                {
+                    logger.LogWarning("No customers provided for addition in AddCustomers");
+                    return BadRequest("List of Customers is empty");
+                }
+
+                _customerService.AddCustomers(newCustomers);
+                return Ok($"{newCustomers.Count} customers added successfully");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error in AddCustomers: {ex}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
     }
 }

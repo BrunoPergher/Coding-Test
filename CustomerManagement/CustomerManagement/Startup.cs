@@ -1,3 +1,4 @@
+using CustomerManagement.Interfaces;
 using CustomerManagement.Services;
 using Microsoft.OpenApi.Models;
 
@@ -18,7 +19,7 @@ public class Startup
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Customer Management", Version = "v1" });
         });
 
-        services.AddSingleton<CustomerService>();
+        services.AddScoped<ICustomerService, CustomerService>();
         services.AddControllers();
     }
 
